@@ -5,7 +5,6 @@ class Package:
         self.address = address
         self.city = city
         self.state = state
-        self.city = city
         self.state = state
         self.zip = zip_code
         self.deadline = deadline

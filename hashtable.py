@@ -49,6 +49,7 @@ class HashTable:
                 return kv[1]  # value
         return None
 
+
     def print_table(self):
         for row in self.table:
             row_list = row

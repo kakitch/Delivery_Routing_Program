@@ -1,4 +1,5 @@
 import csv
+import datetime
 
 
 def distance_table():
@@ -39,12 +40,27 @@ def find_distance(current_index, new_address_index):
     return distance_table[current_index][new_address_index]
 
 
-def determine_total_mileage_per_truck(stop_order):
+def determine_total_mileage_per_truck(sequence):
     distance = 0.0
-    for i in range(len(stop_order) - 1):
-        new = find_distance(stop_order[i], stop_order[i + 1])
+    for i in range(len(sequence) - 1):
+        new = find_distance(sequence[i], sequence[i + 1])
         distance = distance + new
     return distance
+
+
+def determine_mileage_to_stop(id, sequence):
+    index = sequence.index(id)
+    distance = 0.0
+    for i in range(index):
+        new = find_distance(sequence[i], sequence[i + 1])
+        distance = distance + new
+    return distance
+
+
+def time_from_hub_to_delivery(distance):
+    dt = distance / 18
+    t = datetime.timedelta(0, 0, 0, 0, 0, dt)
+    return t
 
 
 class AddressList:

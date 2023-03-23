@@ -5,10 +5,11 @@
 
 import csv
 import sys
+import datetime
+import package
 from optimization import *
 from variables import *
-
-
+import datetime
 
 def load_trucks():
     loads = load_optimize()
@@ -48,11 +49,11 @@ def launch_main_menu():
             valid = True
         elif command == "2":
             id = input("Input Package ID:")
-            time = input("Input Time:")
+            time = input("Input Time in HH:MM Format:")
             option_2(id, time)
             valid = True
         elif command == "3":
-            time = input("Input Time:")
+            time = input("Input Time in HH:MM Format:")
             option_3(time)
             valid = True
         elif command == "4":
@@ -61,7 +62,7 @@ def launch_main_menu():
             print("choose a valid option")
 
 # Main Menu option 2: Get status for any package at a given time
-# Takes id and time as input parameters.
+# Takes id and time as input parameters. DONE
 # Takes ID and determines truck and delivery sequence and determines miles to address
 # Takes (Speed * Miles) to determine travel time
 # Delivery time = start time + travel time + wait time at hub.
@@ -69,22 +70,21 @@ def launch_main_menu():
 # if Delivery time > start time + wait time but < Delivery time, update package status to "in Route"
 # if Delivery time > Delivery time, update package status to delivered.
 def option_2(id, time):
-    truck_list = [list(truck1.manifest.values()),list(truck2.manifest.values()),list(truck3.manifest.values())]
-    truck = 0
-    for i in range(len(truck_list)):
-        temp = []
-        for row in truck_list[i]:
-            temp = temp + row
-        if id in temp:
-            truck = trucki
-    print(truck)
+    t = conv_string_to_timedelta(time)
+    package = get_status_update(id,t)
+    print("Package ID:", package.id, "Address:", package.address, package.city, package.state, package.zip, "Weight:",
+          package.weight, "Deadline:", package.deadline, "Status:", package.status)
 
 # Main Menu option 3: Get status for any package at a given time
 def option_3(time):
-    print(time)
-
-
-
+    t = conv_string_to_timedelta(time)
+    for i in range(len(hash_table.package_list())):
+        result = get_status_update(i+1, t)
+        package = result[0]
+        dt = result[1]
+        tr = result[2]
+        print("Package ID:", package.id, "Address:", package.address, package.city, package.state, package.zip,
+              "Weight:", package.weight, "Deadline:", package.deadline, "Status:", package.status, "notes", package.notes,"Delivery time:", dt, "Truck ID:", tr)
 
 load_trucks()
 launch_main_menu()
@@ -93,10 +93,8 @@ t1 = determine_total_mileage_per_truck(truck1.stop_sequence)
 t2 = determine_total_mileage_per_truck(truck2.stop_sequence)
 t3 = determine_total_mileage_per_truck(truck3.stop_sequence)
 
-print(t1)
-print(t2)
-print(t3)
-print(t1+t2+t3)
+
+#print(t1,t2,t3)
 
 
 
