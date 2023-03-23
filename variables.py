@@ -11,8 +11,7 @@ truck1 = truck.Truck(1)
 truck2 = truck.Truck(2)
 truck3 = truck.Truck(3)
 
-driver1 = truck.Driver(1)
-driver2 = truck.Driver(2)
+
 
 
 def conv_string_to_timedelta(string):

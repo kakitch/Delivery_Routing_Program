@@ -4,7 +4,7 @@ class Truck:
         self.id = id
         self.manifest = {}
         self.stop_sequence = []
-        self.status
+
 
     def print_truck(self):
         print(self.id, self.manifest)
