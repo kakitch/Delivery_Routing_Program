@@ -35,9 +35,7 @@ def load_trucks():
 #       that includes the total mileage traveled by all trucks.
 
 def launch_main_menu():
-    valid = False
-    while valid == False:
-
+    while True == True:
         print("************************************************************************")
         print("1. Display status for package deliveries and total mileage")
         print("2. Display status for any package at a given Time")
@@ -47,22 +45,27 @@ def launch_main_menu():
 
         if command == "1":
             option_1()
-            valid = True
+
         elif command == "2":
             id = input("Input Package ID:")
             time = input("Input Time in HH:MM Format:")
             option_2(id, time)
-            valid = True
+
         elif command == "3":
             time = input("Input Time in HH:MM Format:")
             option_3(time)
-            valid = True
+
         elif command == "4":
             sys.exit()
         else:
             print("choose a valid option")
 
 def option_1():
+    hash_table.search(9).address = "410 S State St"
+    hash_table.search(9).city = "Salt Lake City"
+    hash_table.search(9).state = "UT"
+    hash_table.search(9).state = "84111"
+    truck_reorganize_stops(truck3)
     for i in range(len(hash_table.package_list())):
         result = get_delivery_time(i+1)
         package = result[0]
@@ -84,7 +87,15 @@ def option_1():
 
 def option_2(id, time):
     t = conv_string_to_timedelta(time)
-    package = get_status_update(id,t)
+    if t > datetime.timedelta(0, 0, 0, 0, 20, 10):
+        # 410 S State St., Salt Lake City, UT 84111
+        hash_table.search(9).address = "410 S State St"
+        hash_table.search(9).city = "Salt Lake City"
+        hash_table.search(9).state = "UT"
+        hash_table.search(9).state = "84111"
+        truck_reorganize_stops(truck3)
+    result = get_status_update(id,t)
+    package = result[0]
     print("Package ID:", package.id,
           "Address:", package.address,
           package.city,
@@ -98,6 +109,13 @@ def option_2(id, time):
 # Main Menu option 3: Get status for any package at a given time
 def option_3(time):
     t = conv_string_to_timedelta(time)
+    if t > datetime.timedelta(0, 0, 0, 0, 20, 10):
+        # 410 S State St., Salt Lake City, UT 84111
+        hash_table.search(9).address = "410 S State St"
+        hash_table.search(9).city = "Salt Lake City"
+        hash_table.search(9).state = "UT"
+        hash_table.search(9).state = "84111"
+        truck_reorganize_stops(truck3)
     for i in range(len(hash_table.package_list())):
         result = get_status_update(i+1, t)
         package = result[0]
@@ -117,6 +135,7 @@ def option_3(time):
 
 load_trucks()
 launch_main_menu()
+
 
 t1 = determine_total_mileage_per_truck(truck1.stop_sequence)
 t2 = determine_total_mileage_per_truck(truck2.stop_sequence)
