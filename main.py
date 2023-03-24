@@ -45,7 +45,7 @@ def launch_main_menu():
         command =  input("Choose an option:")
 
         if command == "1":
-            print("one")
+            option_1()
             valid = True
         elif command == "2":
             id = input("Input Package ID:")
@@ -61,19 +61,38 @@ def launch_main_menu():
         else:
             print("choose a valid option")
 
-# Main Menu option 2: Get status for any package at a given time
-# Takes id and time as input parameters. DONE
-# Takes ID and determines truck and delivery sequence and determines miles to address
-# Takes (Speed * Miles) to determine travel time
-# Delivery time = start time + travel time + wait time at hub.
-# if Delivery time < start time + wait time, update status to "at the hub"
-# if Delivery time > start time + wait time but < Delivery time, update package status to "in Route"
-# if Delivery time > Delivery time, update package status to delivered.
+def option_1():
+    for i in range(len(hash_table.package_list())):
+        result = get_delivery_time(i+1)
+        package = result[0]
+        dt = result[1]
+        tr = result[2]
+        print("Package ID:", package.id,
+              # "Address:", package.address,
+              # package.city,
+              # package.state,
+              # package.zip,
+              # "Weight:", package.weight,
+              #"Deadline:", package.deadline,
+              "Status:", package.status,
+              # "notes", package.notes,
+              # "Delivery time:", dt,
+              #"Truck ID:", tr
+              )
+
+
 def option_2(id, time):
     t = conv_string_to_timedelta(time)
     package = get_status_update(id,t)
-    print("Package ID:", package.id, "Address:", package.address, package.city, package.state, package.zip, "Weight:",
-          package.weight, "Deadline:", package.deadline, "Status:", package.status)
+    print("Package ID:", package.id,
+          "Address:", package.address,
+          package.city,
+          package.state,
+          package.zip, "Weight:",
+          package.weight,
+          "Deadline:",
+          package.deadline,
+          "Status:", package.status)
 
 # Main Menu option 3: Get status for any package at a given time
 def option_3(time):
@@ -83,8 +102,17 @@ def option_3(time):
         package = result[0]
         dt = result[1]
         tr = result[2]
-        print("Package ID:", package.id, "Address:", package.address, package.city, package.state, package.zip,
-              "Weight:", package.weight, "Deadline:", package.deadline, "Status:", package.status, "notes", package.notes,"Delivery time:", dt, "Truck ID:", tr)
+        print("Package ID:", package.id,
+              # "Address:", package.address,
+              # package.city, package.state,
+              # package.zip,
+              # "Weight:", package.weight,
+              # "Deadline:", package.deadline,
+              "Status:", package.status,
+              "notes", package.notes,
+              # "Delivery time:", dt,
+              "Truck ID:", tr
+              )
 
 load_trucks()
 launch_main_menu()

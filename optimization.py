@@ -152,3 +152,107 @@ def delivery_sequence_optimize():
     truck1.stop_sequence = truck1_stops
     truck2.stop_sequence = truck2_stops
     truck3.stop_sequence = truck3_stops
+
+
+def get_status_update(id, time):
+    truck_list = [list(truck1.manifest.values()), list(truck2.manifest.values()), list(truck3.manifest.values())]
+    truck = truck1
+    id = int(id)
+    for i in range(len(truck_list)):
+        temp = []
+        for row in truck_list[i]:
+            temp = temp + row
+        for row in temp:
+            if id == row and i == 0:
+                truck = truck1
+                break
+            if id == row and i == 1:
+                truck = truck2
+                break
+            if id == row and i == 2:
+                truck = truck3
+                break
+
+    stop_number = 0
+    for row in truck.manifest:
+        if id in truck.manifest[row]:
+            stop_number = row
+
+    total_mileage = determine_total_mileage_per_truck(truck.stop_sequence)
+
+    mileage_to_stop = determine_mileage_to_stop(stop_number, truck.stop_sequence)
+
+    dt = time_from_hub_to_delivery(mileage_to_stop)
+    start_time = datetime.timedelta(0, 0, 0, 0, 0, 8)
+
+    if time > datetime.timedelta(0, 0, 0, 0, 20, 10) and id == 9:
+        # 410 S State St., Salt Lake City, UT 84111
+        hash_table.search(9).address = "410 S State St."
+        hash_table.search(9).city = "Salt Lake City"
+        hash_table.search(9).state = "UT"
+        hash_table.search(9).state = "84111"
+
+    if truck == truck3:
+        start_time = datetime.timedelta(0, 0, 0, 0, 20, 10)
+        # TODO: add line to reoptimize truck 3 route. DOUBLE CHECK ADDRESS CHANGE ON PACKAGE #9 TAKES EFFECT
+
+    dt = start_time + dt
+
+    if time > dt:
+        hash_table.search(id).status = "Delivered at:" + str(dt)
+
+    package = hash_table.search(id)
+    return package, dt, truck.id
+
+    # TODO rework hashtable with update method
+
+
+def get_delivery_time(id):
+    truck_list = [list(truck1.manifest.values()), list(truck2.manifest.values()), list(truck3.manifest.values())]
+    truck = truck1
+    id = int(id)
+    for i in range(len(truck_list)):
+        temp = []
+        for row in truck_list[i]:
+            temp = temp + row
+        for row in temp:
+            if id == row and i == 0:
+                truck = truck1
+                break
+            if id == row and i == 1:
+                truck = truck2
+                break
+            if id == row and i == 2:
+                truck = truck3
+                break
+
+    stop_number = 0
+    for row in truck.manifest:
+        if id in truck.manifest[row]:
+            stop_number = row
+
+    total_mileage = determine_total_mileage_per_truck(truck.stop_sequence)
+
+    mileage_to_stop = determine_mileage_to_stop(stop_number, truck.stop_sequence)
+
+    dt = time_from_hub_to_delivery(mileage_to_stop)
+    start_time = datetime.timedelta(0, 0, 0, 0, 0, 8)
+
+    if id == 9:
+        # 410 S State St., Salt Lake City, UT 84111
+        hash_table.search(9).address = "410 S State St."
+        hash_table.search(9).city = "Salt Lake City"
+        hash_table.search(9).state = "UT"
+        hash_table.search(9).state = "84111"
+        # TODO need to rework truck route
+
+    if truck == truck3:
+        start_time = datetime.timedelta(0, 0, 0, 0, 20, 10)
+        # TODO: add line to reoptimize truck 3 route. DOUBLE CHECK ADDRESS CHANGE ON PACKAGE #9 TAKES EFFECT
+
+    dt = start_time + dt
+
+    hash_table.search(id).status = "Delivered at:" + str(dt)
+
+    package = hash_table.search(id)
+    return package, dt, truck.id
