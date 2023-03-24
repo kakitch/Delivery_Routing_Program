@@ -14,6 +14,7 @@ import datetime
 def load_trucks():
     loads = load_optimize()
 
+
     truck1.load_truck(loads[0])
     truck2.load_truck(loads[1])
     truck3.load_truck(loads[2])
@@ -109,7 +110,7 @@ def option_3(time):
               # "Weight:", package.weight,
               # "Deadline:", package.deadline,
               "Status:", package.status,
-              "notes", package.notes,
+              # "notes", package.notes,
               # "Delivery time:", dt,
               "Truck ID:", tr
               )

@@ -110,16 +110,7 @@ def load_optimize():
         stop_list_two[closest_address_index] = stops.pop(closest_address_index)
         sl2 = sl2 + stop_list_two[closest_address_index]
 
-    # print(stop_list_two.values())
-    # print("stops after removing notes", stops)
-    # # print("two: ", two)
-    # # print("groups: ", groups)
-    # # print("holding: ", holding)
     stop_list_one.update(stops)
-    # print(stops)
-    # print("stop_list_one: ", stop_list_one)
-    # print("stop_list_two: ", stop_list_two)
-    # print("stop_list_three: ", stop_list_three)
 
     return stop_list_one, stop_list_two, stop_list_three
 
@@ -178,33 +169,33 @@ def get_status_update(id, time):
         if id in truck.manifest[row]:
             stop_number = row
 
-    total_mileage = determine_total_mileage_per_truck(truck.stop_sequence)
-
     mileage_to_stop = determine_mileage_to_stop(stop_number, truck.stop_sequence)
 
     dt = time_from_hub_to_delivery(mileage_to_stop)
-    start_time = datetime.timedelta(0, 0, 0, 0, 0, 8)
+    st = datetime.timedelta(0, 0, 0, 0, 0, 8)
 
     if time > datetime.timedelta(0, 0, 0, 0, 20, 10) and id == 9:
         # 410 S State St., Salt Lake City, UT 84111
-        hash_table.search(9).address = "410 S State St."
+        hash_table.search(9).address = "410 S State St"
         hash_table.search(9).city = "Salt Lake City"
         hash_table.search(9).state = "UT"
         hash_table.search(9).state = "84111"
 
+
     if truck == truck3:
-        start_time = datetime.timedelta(0, 0, 0, 0, 20, 10)
+        st = datetime.timedelta(0, 0, 0, 0, 20, 10)
         # TODO: add line to reoptimize truck 3 route. DOUBLE CHECK ADDRESS CHANGE ON PACKAGE #9 TAKES EFFECT
 
-    dt = start_time + dt
+    dt = st + dt
+
+    if st < time < dt:
+        hash_table.search(id).status = "en route"
 
     if time > dt:
         hash_table.search(id).status = "Delivered at:" + str(dt)
 
     package = hash_table.search(id)
     return package, dt, truck.id
-
-    # TODO rework hashtable with update method
 
 
 def get_delivery_time(id):
@@ -231,28 +222,67 @@ def get_delivery_time(id):
         if id in truck.manifest[row]:
             stop_number = row
 
-    total_mileage = determine_total_mileage_per_truck(truck.stop_sequence)
-
     mileage_to_stop = determine_mileage_to_stop(stop_number, truck.stop_sequence)
 
     dt = time_from_hub_to_delivery(mileage_to_stop)
-    start_time = datetime.timedelta(0, 0, 0, 0, 0, 8)
+    st = datetime.timedelta(0, 0, 0, 0, 0, 8)
 
     if id == 9:
         # 410 S State St., Salt Lake City, UT 84111
-        hash_table.search(9).address = "410 S State St."
+        hash_table.search(9).address = "410 S State St"
         hash_table.search(9).city = "Salt Lake City"
         hash_table.search(9).state = "UT"
         hash_table.search(9).state = "84111"
-        # TODO need to rework truck route
+
 
     if truck == truck3:
-        start_time = datetime.timedelta(0, 0, 0, 0, 20, 10)
+        st = datetime.timedelta(0, 0, 0, 0, 20, 10)
         # TODO: add line to reoptimize truck 3 route. DOUBLE CHECK ADDRESS CHANGE ON PACKAGE #9 TAKES EFFECT
 
-    dt = start_time + dt
+    dt = st + dt
 
     hash_table.search(id).status = "Delivered at:" + str(dt)
 
     package = hash_table.search(id)
     return package, dt, truck.id
+
+
+def truck_reorganize_stops(truck):
+    p = list(truck.manifest.values())
+    pn = []
+    for row in p:
+        pn = pn + row
+
+    set_dict = {}
+    set_list = []
+    for row in pn:
+        address = address_list.find_address_index(hash_table.search(row).address)
+        for row in pn:
+            if address_list.find_address_index(hash_table.search(row).address) == address:
+                set_list.append(row)
+        set_dict[address] = set_list
+        set_list = []
+
+    truck.manifest.clear()
+    truck.load_truck(set_dict)
+
+    truck_stops = list(truck.manifest.keys())
+
+    temp = truck_stops[:]
+    truck_stops.append(0)
+    truck_stops.append(0)
+    truck_stops.insert(0, truck_stops.pop(truck_stops.index(0)))
+
+    for j in range(len(truck_stops) - 2):
+        closest = -1
+        item_swapped = 0
+        for row in temp:
+            mileage = find_distance(truck_stops[j], row)
+            if mileage < closest or closest == -1:
+                closest = mileage
+                truck_stops.insert(j + 1, truck_stops.pop(truck_stops.index(row)))
+                item_swapped = truck_stops[j + 1]
+
+        temp.remove(item_swapped)
+
+    truck1.stop_sequence = truck_stops
