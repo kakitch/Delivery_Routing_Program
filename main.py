@@ -15,9 +15,7 @@ def load_trucks():
     loads = load_optimize()
 
 
-    truck1.load_truck(loads[0])
-    truck2.load_truck(loads[1])
-    truck3.load_truck(loads[2])
+
 
     delivery_sequence_optimize()
 
@@ -71,18 +69,33 @@ def option_1():
         package = result[0]
         dt = result[1]
         tr = result[2]
+
         print("Package ID:", package.id,
               # "Address:", package.address,
               # package.city,
               # package.state,
               # package.zip,
               # "Weight:", package.weight,
-              #"Deadline:", package.deadline,
+              "Deadline:", package.deadline,
               "Status:", package.status,
               # "notes", package.notes,
               # "Delivery time:", dt,
-              #"Truck ID:", tr
+              "Truck ID:", tr
               )
+    t1 = determine_total_mileage_per_truck(truck1.stop_sequence)
+    t2 = determine_total_mileage_per_truck(truck2.stop_sequence)
+    t3 = determine_total_mileage_per_truck(truck3.stop_sequence)
+    tt = t1+t2+t3
+    tt = round(tt, 1)
+    print("total Mileage:", tt)
+
+    print(truck1.manifest)
+    print(truck1.stop_sequence)
+
+    print(truck2.manifest)
+    print(truck2.stop_sequence)
+    print(truck3.manifest)
+    print(truck3.stop_sequence)
 
 
 def option_2(id, time):

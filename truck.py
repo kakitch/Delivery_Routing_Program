@@ -6,11 +6,7 @@ class Truck:
         self.stop_sequence = []
 
 
-    def print_truck(self):
-        print(self.id, self.manifest)
 
-    def load_truck(self, load):
-        self.manifest.update(load)
 
 
 

@@ -105,11 +105,9 @@ def load_optimize():
 
     stop_list_one.update(stops)
 
-    # print(stop_list_one)
-    # print(stop_list_two)
-    # print(stop_list_three)
-
-    return stop_list_one, stop_list_two, stop_list_three
+    truck1.manifest = stop_list_one
+    truck2.manifest = stop_list_two
+    truck3.manifest = stop_list_three
 
 
 def delivery_sequence_optimize():
@@ -166,7 +164,6 @@ def get_status_update(id, time):
         if id in truck.manifest[row]:
             stop_number = row
 
-
     mileage_to_stop = determine_mileage_to_stop(stop_number, truck.stop_sequence)
 
     dt = time_from_hub_to_delivery(mileage_to_stop)
@@ -174,7 +171,6 @@ def get_status_update(id, time):
 
     if truck == truck3:
         st = datetime.timedelta(0, 0, 0, 0, 20, 10)
-        # TODO: add line to reoptimize truck 3 route. DOUBLE CHECK ADDRESS CHANGE ON PACKAGE #9 TAKES EFFECT
 
     dt = st + dt
 
@@ -182,7 +178,16 @@ def get_status_update(id, time):
         hash_table.search(id).status = "en route"
 
     if time > dt:
-        hash_table.search(id).status = "Delivered at:" + str(dt)
+        dt = str(dt)
+        dt = ':'.join(str(dt).split(':')[:2])
+        if dt[1] != ":":
+            if int(dt[0] + dt[1]) >= 13:
+                dt = dt + "PM"
+            else:
+                dt = dt + "AM"
+        else:
+            dt = dt + "AM"
+        hash_table.search(id).status = "Delivered at: " + dt
 
     package = hash_table.search(id)
     return package, dt, truck.id
@@ -219,11 +224,20 @@ def get_delivery_time(id):
 
     if truck == truck3:
         st = datetime.timedelta(0, 0, 0, 0, 20, 10)
-        # TODO: add line to reoptimize truck 3 route. DOUBLE CHECK ADDRESS CHANGE ON PACKAGE #9 TAKES EFFECT
 
     dt = st + dt
+    dt = str(dt)
+    dt = ':'.join(str(dt).split(':')[:2])
 
-    hash_table.search(id).status = "Delivered at:" + str(dt)
+    if dt[1] != ":":
+        if int(dt[0] + dt[1]) >= 13:
+            dt = dt + "PM"
+        else:
+            dt = dt + "AM"
+    else:
+        dt = dt + "AM"
+
+    hash_table.search(id).status = "Delivered at: " + dt
 
     package = hash_table.search(id)
     return package, dt, truck.id
@@ -245,7 +259,7 @@ def truck_reorganize_stops(truck):
         set_list = []
 
     truck.manifest.clear()
-    truck.load_truck(set_dict)
+    truck.manifest = set_dict
 
     truck_stops = list(truck.manifest.keys())
 
