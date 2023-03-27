@@ -1,7 +1,6 @@
 import csv
 from package import Package
 
-
 class HashTable:
 
     def __init__(self, initial_capacity=10):
@@ -50,18 +49,3 @@ class HashTable:
         return None
 
 
-    def print_table(self):
-        for row in self.table:
-            row_list = row
-            for row in row_list:
-                print(row[0], row[1].address, row[1].city, row[1].state, row[1].zip, row[1].deadline, row[1].notes,
-                      row[1].status)
-
-    def package_list(self):
-        package_list = []
-        for row in self.table:
-            row_list = row
-            for row in row_list:
-                package_list.append(row[0])
-
-        return package_list
