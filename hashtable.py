@@ -48,4 +48,10 @@ class HashTable:
                 return kv[1]  # value
         return None
 
-
+    def total_packages(self):
+        l = []
+        for row in self.table:
+            rowlist = row
+            for row in rowlist:
+                l.append(row[0])
+        return len(l)

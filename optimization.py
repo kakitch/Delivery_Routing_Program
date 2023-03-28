@@ -1,7 +1,7 @@
 from variables import *
 
 
-def load_optimize():
+def load_trucks():
     sl1 = [1, 13, 14, 15, 16, 19, 20, 29, 30, 31, 34, 37, 40]  # holding all deadlines except late arrivals
     sl2 = [3, 18, 36, 38, 23, 39, 8, 9, 5, 11, 35, 12, 10, 2, 4, 7]  # 3,18,36,38 have to be on truck 2
     sl3 = [32, 28, 25, 6, 17, 21, 22, 24, 26, 27, 33]  # holds late arrivals, must leave at 9:05
@@ -95,7 +95,7 @@ def get_status_update(id, time):
     package = hash_table.search(id)
     return package, dt, truck.id
 
-
+# get_delivery_time calculates the current status of a package given its ID. Called by
 def get_delivery_time(id):
     truck_list = [list(truck1.manifest.values()), list(truck2.manifest.values()), list(truck3.manifest.values())]
     truck = truck1

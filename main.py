@@ -1,3 +1,5 @@
+# Kyle Kitchens
+# Student ID: 001417219
 import csv
 import sys
 import datetime
@@ -6,8 +8,7 @@ from optimization import *
 from variables import *
 import datetime
 
-def load_trucks():
-    loads = load_optimize()
+
 def launch_main_menu():
     while True == True:
         print("************************************************************************")
@@ -41,7 +42,7 @@ def option_1():
     truck_reorganize_stops(truck1)
     truck_reorganize_stops(truck2)
     truck_reorganize_stops(truck3)
-    for i in range(40):
+    for i in range(hash_table.total_packages()):
         result = get_delivery_time(i+1)
         package = result[0]
         dt = result[1]
@@ -102,7 +103,7 @@ def option_3(time):
         hash_table.search(9).state = "UT"
         hash_table.search(9).state = "84111"
         truck_reorganize_stops(truck3)
-    for i in range(40):
+    for i in range(hash_table.total_packages()):
         result = get_status_update(i+1, t)
         package = result[0]
         dt = result[1]
