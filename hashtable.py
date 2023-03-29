@@ -3,6 +3,8 @@ from package import Package
 
 class HashTable:
 
+    # instantiates a HashTable object with 10 empty buckets. called once in Variables.py
+    # O(n)
     def __init__(self, initial_capacity=10):
 
         # initialize the hash table with empty bucket list entries.
@@ -11,6 +13,9 @@ class HashTable:
             self.table.append([])
         self.load_hash()
 
+    # loads CSV input and instantiates package objects while also inserting them into the hashtable.
+    # The Hashtable structure is that the key is the package ID, and the value is the package object.
+    # O(n)
     def load_hash(self):
         with open("CSV/package.csv") as csvFile:
             read_csv = list(csv.reader(csvFile, delimiter=','))
@@ -25,6 +30,8 @@ class HashTable:
                 # loads package into hash
                 self.insert(package)
 
+    # inserts a package into the hashtable
+    # O(1)
     def insert(self, package):
         # get the bucket list where this item will go.
         id = package.id
@@ -36,6 +43,9 @@ class HashTable:
         bucket_list.append(key_value)
         return True
 
+    # Package search method via hash table
+    # passes key to method and returns package object
+    # O(n)
     def search(self, key):
         # get the bucket list where this key would be.
         bucket = hash(key) % len(self.table)
@@ -48,6 +58,8 @@ class HashTable:
                 return kv[1]  # value
         return None
 
+    # returns the quantity of all packages.
+    # O(n^2)
     def total_packages(self):
         l = []
         for row in self.table:

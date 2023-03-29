@@ -8,7 +8,19 @@ from optimization import *
 from variables import *
 import datetime
 
+# WGUPS Routing Program.
+# overview of flow and time complexity.
+# hash_table is instantiated and loaded - O(n^2)
+# distance_table is instatiated and loaded - O(3n^2)
+# address_table is instantiated and loaded - O(n)
+# load trucks is called - O(n^4)
+# option is selected - O(1)
+# truck_reorganize route is called 3 times for each truck - O(3(n^4 + n^2 + n))
+# either get_status_update is called or get delivery time is called for each package, both O(n^2 + 2n)
+# for O(n^3 + 2n^2)
+# total time complexity: O(4n^4 + n^3 + 9n^2 +2n)
 
+# O(1)
 def launch_main_menu():
     while True == True:
         print("************************************************************************")
@@ -34,6 +46,10 @@ def launch_main_menu():
             sys.exit()
         else:
             print("choose a valid option")
+
+# returns all package information after and what time they were delivered along with total mileage.
+# Also updates the address of package 9
+# O(n)
 def option_1():
     hash_table.search(9).address = "410 S State St"
     hash_table.search(9).city = "Salt Lake City"
@@ -65,6 +81,10 @@ def option_1():
     tt = t1+t2+t3
     tt = round(tt, 1)
     print("total Mileage:", tt)
+
+# returns information about a single package at a certain time
+# Also updates the address of package 9 if input time is after 10:20
+# O(n)
 def option_2(id, time):
     t = conv_string_to_timedelta(time)
     truck_reorganize_stops(truck1)
@@ -89,14 +109,15 @@ def option_2(id, time):
           package.deadline,
           "Status:", package.status)
 
-# Main Menu option 3: Get status for any package at a given time
+# returns information about all packages at a certain time
+# Also updates the address of package 9 if input time is after 10:20
+# O(n)
 def option_3(time):
     t = conv_string_to_timedelta(time)
     truck_reorganize_stops(truck1)
     truck_reorganize_stops(truck2)
     truck_reorganize_stops(truck3)
     if t > datetime.timedelta(0, 0, 0, 0, 20, 10):
-        print("hi")
         # update package # 9 to 410 S State St., Salt Lake City, UT 84111
         hash_table.search(9).address = "410 S State St"
         hash_table.search(9).city = "Salt Lake City"

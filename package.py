@@ -1,5 +1,6 @@
 class Package:
 
+    # instantiates package objects
     def __init__(self, id_number, address, city, state, zip_code, deadline, weight, notes):
         self.id = id_number
         self.address = address

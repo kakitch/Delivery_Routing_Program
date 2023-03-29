@@ -1,7 +1,11 @@
 import csv
 import datetime
 
-
+# instantiates the distance_table, called once in distance.py (line96). the structure of distance table is a dictionary
+# of lists that can be easily accessed by passing in the key of the dictionary and index of the list.
+# the lists are assembled by concatenating the vertical and horizontal portions of the CSV file according to
+# each row.
+# O(3n^2)
 def distance_table():
     distance = {}
     temp_table = []
@@ -36,10 +40,14 @@ def distance_table():
     return distance
 
 
+# finds distance by cross-referencing the indexes in the distance table
+# 0(2)
 def find_distance(current_index, new_address_index):
     return distance_table[current_index][new_address_index]
 
 
+# determines total mileage per truck including mileage returning to hub, based on truck.stop_sequence
+# O(n)
 def determine_total_mileage_per_truck(sequence):
     distance = 0.0
     for i in range(len(sequence) - 1):
@@ -48,6 +56,9 @@ def determine_total_mileage_per_truck(sequence):
     return distance
 
 
+# determines mileage from hub to the address index(id parameter). starts at first index of truck.stop_sequence
+# and iterates until the index value is reached adding up the distance of each leg of the route.
+# O(n)
 def determine_mileage_to_stop(id, sequence):
     index = sequence.index(id)
     distance = 0.0
@@ -57,6 +68,9 @@ def determine_mileage_to_stop(id, sequence):
     return distance
 
 
+# calculates the time based by passing in distance in miles. dividing by 18 for 18mph and creating a
+# datetime.timedelta object based on the value of dt variable as hours.
+# O(1)
 def time_from_hub_to_delivery(distance):
     dt = distance / 18
     t = datetime.timedelta(0, 0, 0, 0, 0, dt)
@@ -64,11 +78,15 @@ def time_from_hub_to_delivery(distance):
 
 
 class AddressList:
+    # instantiates AddressList and creates a list of addresses, called once in variables.py
+    # O(n)
     def __init__(self):
         self.table = []
         with open("CSV/addresses.csv") as csvFile:
             self.table = list(csv.reader(csvFile, delimiter=','))
 
+    # finds the index of an address on address_list. The indexes correspond to the same index in the distance table.
+    # O(n)
     def find_address_index(self, address: str) -> int:
         for row in self.table:
             if address in row[2]:

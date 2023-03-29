@@ -11,7 +11,7 @@ truck1 = truck.Truck(1)
 truck2 = truck.Truck(2)
 truck3 = truck.Truck(3)
 
-
+# converts time strings to datetime.timedelta objects
 def conv_string_to_timedelta(string):
     dt = datetime.datetime.strptime(string, "%H:%M")
     dt = datetime.timedelta(0, 0, 0, 0, dt.minute, dt.hour)

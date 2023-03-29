@@ -1,6 +1,10 @@
 from variables import *
 
 
+# load_trucks manually associates package id's addresses and then with trucks
+# load trucks is called, time complexity is  O^n2 and is dependent on hashtable.search.py which is O^n and
+# address_table.search which is also O^n this function is independent.
+# total time complexity: O(n^4)
 def load_trucks():
     sl1 = [1, 13, 14, 15, 16, 19, 20, 29, 30, 31, 34, 37, 40]  # holding all deadlines except late arrivals
     sl2 = [3, 18, 36, 38, 23, 39, 8, 9, 5, 11, 35, 12, 10, 2, 4, 7]  # 3,18,36,38 have to be on truck 2
@@ -35,7 +39,8 @@ def load_trucks():
     truck2.stop_sequence = truck2_stops
     truck3.stop_sequence = truck3_stops
 
-
+# get_status_update gets a packages status based on a time value passed into the function.
+# worst case is O(n^2 + 2n)
 def get_status_update(id, time):
     truck_list = [list(truck1.manifest.values()), list(truck2.manifest.values()), list(truck3.manifest.values())]
     truck = truck1
@@ -56,7 +61,7 @@ def get_status_update(id, time):
                 break
 
     stop_number = 0
-    for row in truck.manifest:
+    for row in truck.manifest:             # O(n)
         if id in truck.manifest[row]:
             stop_number = row
 
@@ -95,7 +100,8 @@ def get_status_update(id, time):
     package = hash_table.search(id)
     return package, dt, truck.id
 
-# get_delivery_time calculates the current status of a package given its ID. Called by
+# get_delivery_time calculates the current status of a package given its ID. Called by Option 1 of main menu.
+# worst case is O(n^2 + 2n)
 def get_delivery_time(id):
     truck_list = [list(truck1.manifest.values()), list(truck2.manifest.values()), list(truck3.manifest.values())]
     truck = truck1
@@ -154,7 +160,11 @@ def get_delivery_time(id):
     package = hash_table.search(id)
     return package, dt, truck.id
 
-
+# truck_reorganize_stops takes package data and sorts by the address to find packages with the same address
+# on the same truck and groups then. It then it takes the index of those addresses according to the
+# distance table and calculates the closest address according to its current address index as it iterates
+# through the list of stops.
+# O(n^4 + n^2 + n)
 def truck_reorganize_stops(truck):
     p = list(truck.manifest.values())
     pn = []
