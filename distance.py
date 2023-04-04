@@ -1,6 +1,7 @@
 import csv
 import datetime
 
+
 # instantiates the distance_table, called once in distance.py (line96). the structure of distance table is a dictionary
 # of lists that can be easily accessed by passing in the key of the dictionary and index of the list.
 # the lists are assembled by concatenating the vertical and horizontal portions of the CSV file according to
@@ -19,22 +20,25 @@ def distance_table():
                 if row != '':
                     temp_table[r][c] = float(row)
     i = 0
+
     for row in temp_table:
         current_index = temp_table.index(row)
         horizontal_list = []
         vertical_list = []
-
+        # gathers the horizontal elements in the temp table from the csv file
         for row in temp_table[current_index]:
             index = temp_table[current_index].index(row)
             if index <= current_index:
                 horizontal_list.append(row)
-
+        # gathers the vertical elements in the temp table from the csv file
         for row in temp_table:
             index = temp_table.index(row)
             if index > current_index:
                 vertical_list.append(row[current_index])
-
+        # concatenates the two lists for a list of all associated distance
         mileage_list = horizontal_list + vertical_list
+
+        # creates a new entry in the distance table
         distance[current_index] = mileage_list
     # print(distance)
     return distance
@@ -93,4 +97,5 @@ class AddressList:
                 return int(row[0])
 
 
+# instantiates the distance table
 distance_table = distance_table()

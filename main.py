@@ -22,6 +22,8 @@ import datetime
 
 # O(1)
 def launch_main_menu():
+    # launches main menu, put in while loop to reload for bad input or for completed command until option 4 is
+    # called for sys.exit()
     while True == True:
         print("************************************************************************")
         print("1. Display status for package deliveries and total mileage")
@@ -51,13 +53,16 @@ def launch_main_menu():
 # Also updates the address of package 9
 # O(n)
 def option_1():
+    # since this option is for completed deliveries only, package 9 address info is updated
     hash_table.search(9).address = "410 S State St"
     hash_table.search(9).city = "Salt Lake City"
     hash_table.search(9).state = "UT"
     hash_table.search(9).state = "84111"
+    # truck reorganized stops called for all trucks
     truck_reorganize_stops(truck1)
     truck_reorganize_stops(truck2)
     truck_reorganize_stops(truck3)
+    # get delivery time is called for all packages and output is printed
     for i in range(hash_table.total_packages()):
         result = get_delivery_time(i+1)
         package = result[0]
@@ -75,6 +80,7 @@ def option_1():
               # "Delivery time:", dt,
               # "Truck ID:", tr
               )
+    # total mileage is determined and output
     t1 = determine_total_mileage_per_truck(truck1.stop_sequence)
     t2 = determine_total_mileage_per_truck(truck2.stop_sequence)
     t3 = determine_total_mileage_per_truck(truck3.stop_sequence)
@@ -87,9 +93,11 @@ def option_1():
 # O(n)
 def option_2(id, time):
     t = conv_string_to_timedelta(time)
+    # truck reorganize stops is called
     truck_reorganize_stops(truck1)
     truck_reorganize_stops(truck2)
     truck_reorganize_stops(truck3)
+    # if time is after 10:20, package 9 is updated and truck reorganize stops is run again for address update
     if t > datetime.timedelta(0, 0, 0, 0, 20, 10):
         # update package # 9 to 410 S State St., Salt Lake City, UT 84111
         hash_table.search(9).address = "410 S State St"
@@ -97,8 +105,10 @@ def option_2(id, time):
         hash_table.search(9).state = "UT"
         hash_table.search(9).state = "84111"
         truck_reorganize_stops(truck3)
+    # gets the package status for single package at a given time
     result = get_status_update(id,t)
     package = result[0]
+    # prints package info
     print("Package ID:", package.id,
           "Address:", package.address,
           package.city,
@@ -114,16 +124,19 @@ def option_2(id, time):
 # O(n)
 def option_3(time):
     t = conv_string_to_timedelta(time)
+    # truck reorganize stops is called for all trucks for optimization
     truck_reorganize_stops(truck1)
     truck_reorganize_stops(truck2)
     truck_reorganize_stops(truck3)
     if t > datetime.timedelta(0, 0, 0, 0, 20, 10):
-        # update package # 9 to 410 S State St., Salt Lake City, UT 84111
+        # update package # 9 to 410 S State St., Salt Lake City, UT 84111 and optimize stops again to account
+        # address change
         hash_table.search(9).address = "410 S State St"
         hash_table.search(9).city = "Salt Lake City"
         hash_table.search(9).state = "UT"
         hash_table.search(9).state = "84111"
         truck_reorganize_stops(truck3)
+    # gets status of all packages and prints package information
     for i in range(hash_table.total_packages()):
         result = get_status_update(i+1, t)
         package = result[0]
@@ -138,7 +151,7 @@ def option_3(time):
               "Status:", package.status,
               # "notes", package.notes,
               # "Delivery time:", dt,
-              "Truck ID:", tr
+              #"Truck ID:", tr
               )
 
 
